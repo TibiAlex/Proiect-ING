@@ -52,7 +52,7 @@ then
         IMAGE_NAME=$(echo $2 | cut -d'=' -f2)
         IMAGE_TAG=$(echo $3 | cut -d'=' -f2)
         # here i check if there already is a container running so i can stop it
-        container_name=$(docker ps -a --format '{{.Names}}' | one_flask_like_no_other)
+        container_name=$(docker ps -a --format '{{.Names}}' | grep one_flask_like_no_other)
         if [ "$container_name" = "one_flask_like_no_other" ]; then
             docker stop one_flask_like_no_other
             docker rm one_flask_like_no_other
@@ -70,7 +70,7 @@ then
     else
         echo "Sending a request with curl!"
         ENDPOINT=$(echo $2 | cut -d'=' -f2)
-        curl -v http://localhost:5000/liveness
+        curl -v $ENDPOINT
     fi
 elif [ "$1" = "kube_deploy" ]
 then
