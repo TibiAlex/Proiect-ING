@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ing
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deployment
+  labels:
+    app: one_flask_like_no_other
+  namespace: ing
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: one_flask_like_no_other
+  template:
+    metadata:
+      labels:
+        app: one_flask_like_no_other
+    spec:
+      containers:
+      - name: one-flask-like-no-other
+        image: tibialex2000/map:1.0.0
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+            httpGet:
+              path: /liveness
+              port: 5000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 2
+        readinessProbe:
+          httpGet:
+            path: /liveness
+            port: 5000
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 2
+        resources:
+          limits:
+            cpu: 100m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+
+# might need nodeSelector on cloud if we have multiple nodes
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+  namespace: ing
+spec:
+  selector:
+    app: one_flask_like_no_other
+  ports:
+    - protocol: TCP
+      port: 5000
+  type: LoadBalancer
