@@ -75,7 +75,7 @@ then
 elif [ "$1" = "kube_deploy" ]
 then
     echo "Preparing to deploy to minikube"
-    kubectl apply -f k8s_manifest.yaml
+    kubectl apply -f manifests/k8s_manifest.yaml
     echo "The application has been deployed!"
 else
     echo "Wrong first parameter, the options are: build, push, deploy, test, kube_deploy!"
