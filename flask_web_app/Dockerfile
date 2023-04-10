@@ -8,6 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Install flask
+RUN pip3 install requests
 RUN pip3 install flask
 
 # Set env variables
